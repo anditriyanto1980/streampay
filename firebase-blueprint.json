@@ -1,0 +1,43 @@
+{
+  "entities": {
+    "incomeRecord": {
+      "title": "Income Record",
+      "description": "Pencatatan nominal uang masuk live streaming Shopee dan Tokopedia per live streamer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "inputDate": { "type": "string" },
+        "transactionDate": { "type": "string" },
+        "streamerId": {
+          "type": "string",
+          "enum": ["nata", "dona", "nina", "fawwas"]
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["shopee", "tokopedia"]
+        },
+        "amount": { "type": "number" },
+        "sessionTitle": { "type": "string" },
+        "orderCount": { "type": "number" },
+        "receiptNumber": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "inputDate",
+        "transactionDate",
+        "streamerId",
+        "platform",
+        "amount",
+        "sessionTitle"
+      ]
+    }
+  },
+  "firestore": {
+    "/incomeRecords/{recordId}": {
+      "schema": "incomeRecord",
+      "description": "Daftar seluruh transaksi pencatatan uang masuk live streamer"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "StreamPay - Rekap Uang Masuk Live Streamer",
+  "description": "Aplikasi standar pencatatan uang masuk nominal Shopee & Tokopedia untuk 4 live streamer (Nata, Dona, Nina, Fawwas) dengan laporan bulanan ekspor Excel dan PDF.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

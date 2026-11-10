@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidIncomeRecord(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.inputDate is string && data.inputDate.size() <= 30
+        && data.transactionDate is string && data.transactionDate.size() <= 30
+        && data.streamerId in ['nata', 'dona', 'nina', 'fawwas']
+        && data.platform in ['shopee', 'tokopedia']
+        && data.amount is number && data.amount >= 0
+        && data.sessionTitle is string && data.sessionTitle.size() <= 200;
+    }
+
+    match /incomeRecords/{recordId} {
+      allow read: if true;
+      allow create: if isValidId(recordId) && isValidIncomeRecord(incoming());
+      allow update: if isValidId(recordId) && isValidIncomeRecord(incoming());
+      allow delete: if isValidId(recordId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
