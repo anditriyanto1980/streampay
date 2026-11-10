@@ -1,11 +1,9 @@
-import React from 'react';
 import {
   Video,
   PlusCircle,
   FileSpreadsheet,
   FileText,
   Download,
-  RotateCcw,
   Trash2,
   Cloud,
   LogIn,
@@ -17,7 +15,6 @@ interface NavbarProps {
   onOpenNewTransaction: () => void;
   onExportExcel: () => void;
   onExportPdf: () => void;
-  onResetData: () => void;
   onOpenClearDatabase: () => void;
   onBackupJson: () => void;
   totalIncomeThisMonth: number;
@@ -34,7 +31,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNewTransaction,
   onExportExcel,
   onExportPdf,
-  onResetData,
   onOpenClearDatabase,
   onBackupJson,
   user,
@@ -110,13 +106,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 title="Backup Data JSON"
               >
                 <Download className="w-4 h-4" />
-              </button>
-              <button
-                onClick={onResetData}
-                className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                title="Kembalikan Contoh Sample Awal"
-              >
-                <RotateCcw className="w-4 h-4" />
               </button>
               <button
                 onClick={onOpenClearDatabase}

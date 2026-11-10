@@ -363,7 +363,6 @@ export default function App() {
         onOpenNewTransaction={handleOpenCreate}
         onExportExcel={handleExportExcel}
         onExportPdf={handleExportPdf}
-        onResetData={handleResetData}
         onOpenClearDatabase={() => setIsClearModalOpen(true)}
         onBackupJson={handleBackupJson}
         totalIncomeThisMonth={totalIncomeInPeriod}
