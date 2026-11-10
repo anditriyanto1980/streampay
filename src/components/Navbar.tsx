@@ -75,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                Pencatatan Uang Masuk Live Streamer • Nata, Dona, Nina, Fawwas
+                Pencatatan Uang Masuk Live Streamer • Powered By : Andi Triyanto
               </p>
             </div>
           </div>

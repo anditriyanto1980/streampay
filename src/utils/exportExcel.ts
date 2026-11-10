@@ -19,6 +19,7 @@ export function exportPeriodReportToExcel(
     ['LAPORAN PENCATATAN UANG MASUK LIVE STREAMING'],
     [`Periode: ${periodLabel}`],
     [`Tanggal Unduh: ${new Date().toLocaleDateString('id-ID')}`],
+    ['Powered By : Andi Triyanto'],
     [],
     ['RINGKASAN TOTAL OMSET PERIODE INI'],
     ['Kategori', 'Nominal (Rp)', 'Keterangan'],

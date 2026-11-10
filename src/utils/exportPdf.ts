@@ -38,7 +38,7 @@ export function exportPeriodReportToPdf(
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    })}`,
+    })}  |  Powered By : Andi Triyanto`,
     14,
     23
   );

@@ -487,10 +487,14 @@ export default function App() {
       {/* Footer */}
       <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 no-print">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="font-bold text-slate-700 dark:text-slate-300">StreamPay</span>
             <span>•</span>
-            <span>Pencatatan Live Streamer: Nata, Dona, Nina, Fawwas</span>
+            <span>Live Streamer: Nata, Dona, Nina, Fawwas</span>
+            <span>•</span>
+            <span className="font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md border border-indigo-200/60 dark:border-indigo-800/60">
+              Powered By : Andi Triyanto
+            </span>
             <span>•</span>
             <span className="text-indigo-600 font-semibold flex items-center gap-1">
               <Cloud className="w-3 h-3" /> Firebase Firestore
