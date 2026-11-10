@@ -21,8 +21,9 @@ interface NavbarProps {
   onOpenClearDatabase: () => void;
   onBackupJson: () => void;
   totalIncomeThisMonth: number;
-  monthName: string;
-  year: number;
+  monthName?: string;
+  year?: number;
+  periodLabel?: string;
   user: User | null;
   onLogin: () => void;
   onLogout: () => void;

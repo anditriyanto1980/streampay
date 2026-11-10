@@ -4,13 +4,11 @@ import { IncomeRecord, StreamerMonthlyStats } from '../types';
 import { MONTH_NAMES_ID, PLATFORMS } from '../constants';
 import { formatIDR, formatDateIndo } from './formatters';
 
-export function exportMonthlyReportToPdf(
+export function exportPeriodReportToPdf(
   records: IncomeRecord[],
   stats: StreamerMonthlyStats[],
-  month: number,
-  year: number
+  periodLabel: string
 ): void {
-  const monthName = MONTH_NAMES_ID[month - 1];
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -28,20 +26,28 @@ export function exportMonthlyReportToPdf(
 
   // Title Text
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(16);
+  doc.setFontSize(15);
   doc.setFont('helvetica', 'bold');
   doc.text('LAPORAN PENCATATAN UANG MASUK LIVE STREAMER', 14, 12);
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(`SHOPEE LIVE & TOKOPEDIA LIVE  |  PERIODE: ${monthName.toUpperCase()} ${year}`, 14, 18);
-  doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 14, 23);
+  doc.text(`SHOPEE LIVE & TOKOPEDIA LIVE  |  PERIODE: ${periodLabel.toUpperCase()}`, 14, 18);
+  doc.text(
+    `Dicetak pada: ${new Date().toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })}`,
+    14,
+    23
+  );
 
   // Summary Cards Box
   doc.setTextColor(30, 41, 59);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('1. RINGKASAN OMSET BULAN INI', 14, 37);
+  doc.text('1. RINGKASAN OMSET PERIODE INI', 14, 37);
 
   // 3 Mini summary boxes
   // Box 1: Total Omset
@@ -170,7 +176,7 @@ export function exportMonthlyReportToPdf(
     head: [
       ['No', 'Tgl Sesi', 'Tgl Input', 'Streamer', 'Platform', 'Sesi Live', 'No. Ref', 'Nominal (Rp)'],
     ],
-    body: detailRows.length > 0 ? detailRows : [['-', '-', '-', '-', '-', 'Belum ada transaksi', '-', '-']],
+    body: detailRows.length > 0 ? detailRows : [['-', '-', '-', '-', '-', 'Belum ada transaksi di periode ini', '-', '-']],
     theme: 'striped',
     headStyles: {
       fillColor: [51, 65, 85],
@@ -198,7 +204,6 @@ export function exportMonthlyReportToPdf(
   doc.setPage(pageCount);
   const finalDetailY = (doc as any).lastAutoTable?.finalY || 200;
 
-  // If near bottom of page, add page for signature
   let sigY = finalDetailY + 15;
   if (sigY > 245) {
     doc.addPage();
@@ -215,6 +220,17 @@ export function exportMonthlyReportToPdf(
   doc.text('Mengetahui & Menyetujui:', 140, sigY);
   doc.text('( Owner / Finance Lead )', 138, sigY + 22);
 
-  // Save the PDF
-  doc.save(`Laporan_Live_Streamer_${monthName}_${year}.pdf`);
+  const cleanLabel = periodLabel.replace(/[/\\?%*:|"<>]/g, '_').replace(/\s+/g, '_');
+  doc.save(`Laporan_Live_Streamer_${cleanLabel}.pdf`);
+}
+
+// Backward-compatible wrapper
+export function exportMonthlyReportToPdf(
+  records: IncomeRecord[],
+  stats: StreamerMonthlyStats[],
+  month: number,
+  year: number
+): void {
+  const monthName = MONTH_NAMES_ID[month - 1];
+  exportPeriodReportToPdf(records, stats, `${monthName} ${year}`);
 }

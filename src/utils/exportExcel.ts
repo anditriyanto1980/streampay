@@ -3,26 +3,24 @@ import { IncomeRecord, StreamerMonthlyStats } from '../types';
 import { MONTH_NAMES_ID, PLATFORMS } from '../constants';
 import { formatDateIndo } from './formatters';
 
-export function exportMonthlyReportToExcel(
+export function exportPeriodReportToExcel(
   records: IncomeRecord[],
   stats: StreamerMonthlyStats[],
-  month: number,
-  year: number
+  periodLabel: string
 ): void {
-  const monthName = MONTH_NAMES_ID[month - 1];
   const totalIncome = stats.reduce((sum, s) => sum + s.totalIncome, 0);
   const totalShopee = stats.reduce((sum, s) => sum + s.shopeeIncome, 0);
   const totalTokped = stats.reduce((sum, s) => sum + s.tokpedIncome, 0);
   const totalSessions = stats.reduce((sum, s) => sum + s.sessionCount, 0);
   const totalOrders = stats.reduce((sum, s) => sum + s.totalOrders, 0);
 
-  // Sheet 1: Ringkasan Bulanan
+  // Sheet 1: Ringkasan Periode
   const summaryData: (string | number)[][] = [
-    ['LAPORAN BULANAN PENCATATAN UANG MASUK LIVE STREAMING'],
-    [`Periode: ${monthName} ${year}`],
-    [`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`],
+    ['LAPORAN PENCATATAN UANG MASUK LIVE STREAMING'],
+    [`Periode: ${periodLabel}`],
+    [`Tanggal Unduh: ${new Date().toLocaleDateString('id-ID')}`],
     [],
-    ['RINGKASAN TOTAL OMSET BULAN INI'],
+    ['RINGKASAN TOTAL OMSET PERIODE INI'],
     ['Kategori', 'Nominal (Rp)', 'Keterangan'],
     ['Total Uang Masuk', totalIncome, 'Total keseluruhan Shopee & Tokopedia'],
     ['Total Shopee Live', totalShopee, `${((totalShopee / (totalIncome || 1)) * 100).toFixed(1)}% dari total`],
@@ -30,7 +28,7 @@ export function exportMonthlyReportToExcel(
     ['Total Sesi Live', totalSessions, 'Sesi'],
     ['Total Pesanan / Order', totalOrders, 'Checkout'],
     [],
-    ['REKAPITULASI PER LIVE STREAMER'],
+    ['REKAPITULASI PER LIVE STREAMER (Nata, Dona, Nina, Fawwas)'],
     [
       'No',
       'Nama Streamer',
@@ -72,7 +70,6 @@ export function exportMonthlyReportToExcel(
 
   const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
 
-  // Set column widths for summary
   wsSummary['!cols'] = [
     { wch: 6 },
     { wch: 22 },
@@ -147,10 +144,22 @@ export function exportMonthlyReportToExcel(
 
   // Create workbook
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Ringkasan Bulanan');
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Ringkasan');
   XLSX.utils.book_append_sheet(wb, wsDetail, 'Rincian Transaksi');
 
-  // Download file
-  const fileName = `Laporan_Uang_Masuk_${monthName}_${year}.xlsx`;
+  // Clean filename
+  const cleanLabel = periodLabel.replace(/[/\\?%*:|"<>]/g, '_').replace(/\s+/g, '_');
+  const fileName = `Laporan_Live_Streamer_${cleanLabel}.xlsx`;
   XLSX.writeFile(wb, fileName);
+}
+
+// Backward-compatible wrapper
+export function exportMonthlyReportToExcel(
+  records: IncomeRecord[],
+  stats: StreamerMonthlyStats[],
+  month: number,
+  year: number
+): void {
+  const monthName = MONTH_NAMES_ID[month - 1];
+  exportPeriodReportToExcel(records, stats, `${monthName} ${year}`);
 }

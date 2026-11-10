@@ -36,7 +36,16 @@ export interface FilterState {
   searchQuery: string;
 }
 
-export interface StreamerMonthlyStats {
+export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
+
+export interface DateRangeInfo {
+  type: PeriodType;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD
+  label: string;     // e.g. "09 Nov 2026", "Minggu Ini (03 - 09 Nov 2026)", "November 2026", "Tahun 2026"
+}
+
+export interface StreamerPeriodStats {
   streamer: StreamerProfile;
   totalIncome: number;
   shopeeIncome: number;
@@ -46,3 +55,6 @@ export interface StreamerMonthlyStats {
   percentageOfTotal: number;
   avgPerSession: number;
 }
+
+// Backward compatibility alias
+export type StreamerMonthlyStats = StreamerPeriodStats;

@@ -7,16 +7,14 @@ interface StreamerCardsGridProps {
   stats: StreamerMonthlyStats[];
   selectedStreamer: StreamerId | 'all';
   onSelectStreamer: (streamerId: StreamerId | 'all') => void;
-  monthName: string;
-  year: number;
+  periodLabel: string;
 }
 
 export const StreamerCardsGrid: React.FC<StreamerCardsGridProps> = ({
   stats,
   selectedStreamer,
   onSelectStreamer,
-  monthName,
-  year,
+  periodLabel,
 }) => {
   // Sort by highest income to calculate rank
   const sortedStats = [...stats].sort((a, b) => b.totalIncome - a.totalIncome);
@@ -27,7 +25,7 @@ export const StreamerCardsGrid: React.FC<StreamerCardsGridProps> = ({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-            Performa 4 Live Streamer ({monthName} {year})
+            Performa 4 Live Streamer ({periodLabel})
           </h2>
         </div>
         <p className="text-xs text-slate-500">Klik kartu streamer untuk memfilter daftar transaksi</p>

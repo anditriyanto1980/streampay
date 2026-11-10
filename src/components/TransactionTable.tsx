@@ -22,6 +22,7 @@ interface TransactionTableProps {
   onEdit: (record: IncomeRecord) => void;
   onDelete: (id: string) => void;
   onOpenNewTransaction: () => void;
+  periodLabel?: string;
 }
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({
@@ -33,6 +34,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
   onEdit,
   onDelete,
   onOpenNewTransaction,
+  periodLabel,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortField, setSortField] = useState<'date' | 'amount'>('date');
@@ -97,6 +99,11 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
         <div>
           <h3 className="font-extrabold text-lg text-slate-900 dark:text-white flex items-center gap-2">
             <span>Daftar Transaksi Masuk</span>
+            {periodLabel && (
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                • {periodLabel}
+              </span>
+            )}
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold">
               {filteredRecords.length} Data
             </span>
