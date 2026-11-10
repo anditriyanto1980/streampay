@@ -157,14 +157,23 @@ export async function deleteIncomeRecordFromFirestore(id: string): Promise<void>
 }
 
 export async function clearAllIncomeRecordsFromFirestore(): Promise<void> {
+  try {
+    localStorage.setItem('streampay_db_cleared_v1', 'true');
+    localStorage.setItem('streampay_has_initialized_v1', 'true');
+  } catch (e) {
+    console.error('Failed to set local storage cleared flag:', e);
+  }
+
   const colRef = collection(db, COLLECTION_NAME);
   try {
     const snapshot = await getDocs(colRef);
-    const batch = writeBatch(db);
-    snapshot.docs.forEach((d) => {
-      batch.delete(d.ref);
-    });
-    await batch.commit();
+    if (!snapshot.empty) {
+      const batch = writeBatch(db);
+      snapshot.docs.forEach((d) => {
+        batch.delete(d.ref);
+      });
+      await batch.commit();
+    }
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, COLLECTION_NAME);
   }
@@ -172,6 +181,14 @@ export async function clearAllIncomeRecordsFromFirestore(): Promise<void> {
 
 export async function seedInitialDataIfEmpty(initialRecords: IncomeRecord[]): Promise<void> {
   try {
+    // If database was cleared or already initialized, NEVER auto-reseed on refresh!
+    if (
+      localStorage.getItem('streampay_db_cleared_v1') === 'true' ||
+      localStorage.getItem('streampay_has_initialized_v1') === 'true'
+    ) {
+      return;
+    }
+
     const colRef = collection(db, COLLECTION_NAME);
     const snapshot = await getDocs(colRef);
     if (snapshot.empty && initialRecords.length > 0) {
@@ -181,9 +198,26 @@ export async function seedInitialDataIfEmpty(initialRecords: IncomeRecord[]): Pr
         batch.set(docRef, rec);
       });
       await batch.commit();
+      localStorage.setItem('streampay_has_initialized_v1', 'true');
     }
   } catch (error) {
     console.warn('Initial seed check error:', error);
+  }
+}
+
+export async function forceSeedSampleData(sampleRecords: IncomeRecord[]): Promise<void> {
+  try {
+    localStorage.removeItem('streampay_db_cleared_v1');
+    localStorage.setItem('streampay_has_initialized_v1', 'true');
+
+    const batch = writeBatch(db);
+    sampleRecords.forEach((rec) => {
+      const docRef = doc(db, COLLECTION_NAME, rec.id);
+      batch.set(docRef, rec);
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error('Force seed error:', error);
   }
 }
 

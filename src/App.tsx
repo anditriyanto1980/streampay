@@ -34,6 +34,7 @@ import {
   deleteIncomeRecordFromFirestore,
   clearAllIncomeRecordsFromFirestore,
   seedInitialDataIfEmpty,
+  forceSeedSampleData,
   loginWithGoogle,
   logoutUser,
 } from './firebase';
@@ -270,7 +271,7 @@ export default function App() {
 
       try {
         await clearAllIncomeRecordsFromFirestore();
-        await seedInitialDataIfEmpty(sample);
+        await forceSeedSampleData(sample);
       } catch (err) {
         console.error('Reset firestore error:', err);
       }
