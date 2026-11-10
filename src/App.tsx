@@ -193,14 +193,15 @@ export default function App() {
 
   // Handle Save (writes to Firebase Firestore + local cache)
   const handleSaveTransaction = async (
-    formData: Omit<IncomeRecord, 'id' | 'createdAt'>,
+    items: Array<Omit<IncomeRecord, 'id' | 'createdAt'>>,
     existingId?: string
   ) => {
-    if (existingId) {
+    if (existingId && items.length > 0) {
       // Update
+      const item = items[0];
       const existing = records.find((r) => r.id === existingId);
       const updatedRec: IncomeRecord = {
-        ...formData,
+        ...item,
         id: existingId,
         createdAt: existing?.createdAt || new Date().toISOString(),
       };
@@ -217,23 +218,31 @@ export default function App() {
 
       showToast('Data pencatatan uang masuk berhasil diperbarui!');
     } else {
-      // Create new
-      const newRec: IncomeRecord = {
-        ...formData,
-        id: `rec-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      // Create new (can be both Shopee and Tokopedia simultaneously with different numbers)
+      const newRecs: IncomeRecord[] = items.map((item, idx) => ({
+        ...item,
+        id: `rec-${Date.now()}-${idx}-${Math.floor(Math.random() * 1000)}`,
         createdAt: new Date().toISOString(),
-      };
-      const updated = [newRec, ...records];
+      }));
+
+      const updated = [...newRecs, ...records];
       setRecords(updated);
       saveRecordsToStorage(updated);
 
-      try {
-        await saveIncomeRecordToFirestore(newRec);
-      } catch (err) {
-        console.error('Failed to create in Firestore:', err);
+      for (const rec of newRecs) {
+        try {
+          await saveIncomeRecordToFirestore(rec);
+        } catch (err) {
+          console.error('Failed to create in Firestore:', err);
+        }
       }
 
-      showToast(`Pencatatan uang masuk ${formatIDR(formData.amount)} berhasil ditambahkan ke Cloud!`);
+      const totalNominal = items.reduce((sum, i) => sum + i.amount, 0);
+      showToast(
+        items.length > 1
+          ? `Tersimpan 2 transaksi: Shopee & Tokopedia total ${formatIDR(totalNominal)}!`
+          : `Pencatatan uang masuk ${formatIDR(totalNominal)} berhasil disimpan!`
+      );
     }
     setEditingRecord(null);
   };
