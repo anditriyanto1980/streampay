@@ -45,6 +45,7 @@ import { PerformanceReportView } from './components/PerformanceReportView';
 import { TransactionTable } from './components/TransactionTable';
 import { TransactionFormModal } from './components/TransactionFormModal';
 import { ClearDatabaseModal } from './components/ClearDatabaseModal';
+import { RevenueTrendChart } from './components/RevenueTrendChart';
 import { Layers, TrendingUp, CheckCircle, Cloud, Calendar } from 'lucide-react';
 
 export default function App() {
@@ -422,6 +423,13 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 flex-1 w-full">
+        {/* Visualisasi Tren Kenaikan Pendapatan (Line Chart recharts) */}
+        <RevenueTrendChart
+          records={records}
+          selectedYear={selectedYear}
+          onYearChange={setSelectedYear}
+        />
+
         {/* Streamers 4 Grid (Dynamic for the current period) */}
         <StreamerCardsGrid
           stats={periodStats}
